@@ -244,6 +244,7 @@ Consult the interactive API docs for request schemas, response formats, and curr
 
 ## Repository Structure
 
+```text
 phishguard/
 |-- backend/
 |   |-- app/                         # FastAPI application, models, auth, API routers
@@ -267,6 +268,7 @@ phishguard/
 |   |-- evaluation-report-template.md
 |
 |-- README.md
+```
 
 ## Adding Real Screenshots
 
