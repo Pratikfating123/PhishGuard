@@ -1,6 +1,6 @@
 <div align="center">
 
-# ðŸ›¡ï¸ PhishGuard AI
+#  PhishGuard AI
 
 ### AI-assisted phishing detection and secure email analysis
 
