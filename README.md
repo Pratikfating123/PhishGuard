@@ -1,6 +1,6 @@
-<div align="center">
+﻿<div align="center">
 
-# 🛡️ PhishGuard AI
+# ðŸ›¡ï¸ PhishGuard AI
 
 ### AI-assisted phishing detection and secure email analysis
 
@@ -12,7 +12,7 @@ Analyze suspicious email content, inspect URLs and sender signals, review risk i
 [![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 
-**Live Demo:** [PhishGuard AI](https://phish-guard-murex.vercel.app/) · **API Docs:** run the backend locally and visit `http://localhost:8000/docs`
+**Live Demo:** [PhishGuard AI](https://phish-guard-murex.vercel.app/) Â· **API Docs:** run the backend locally and visit `http://localhost:8000/docs`
 
 </div>
 
@@ -20,7 +20,7 @@ Analyze suspicious email content, inspect URLs and sender signals, review risk i
 
 ## Product Preview
 
-![PhishGuard AI dashboard preview](docs/screenshots/dashboard-preview.svg)
+![PhishGuard AI dashboard preview](docs/screenshots/dashboard-preview.png)
 
 > The included preview is an illustrative README graphic, not a captured live application screenshot. Replace it with a real screenshot from your running app when available. See [Adding real screenshots](#adding-real-screenshots).
 
@@ -60,20 +60,20 @@ Feature availability depends on configuration and whether the required database 
 
 ```text
 Browser
-  │
-  ▼
+  â”‚
+  â–¼
 React + Vite frontend
-  │  HTTP API requests, session cookie, CSRF token
-  ▼
+  â”‚  HTTP API requests, session cookie, CSRF token
+  â–¼
 FastAPI backend
-  ├── Authentication and authorization
-  ├── Email parsing and analysis pipeline
-  │    ├── Sender / header checks
-  │    ├── URL indicator checks
-  │    ├── Content heuristics
-  │    └── Optional ML text classifier
-  ├── Dashboard, reports, quarantine, audit logs
-  ▼
+  â”œâ”€â”€ Authentication and authorization
+  â”œâ”€â”€ Email parsing and analysis pipeline
+  â”‚    â”œâ”€â”€ Sender / header checks
+  â”‚    â”œâ”€â”€ URL indicator checks
+  â”‚    â”œâ”€â”€ Content heuristics
+  â”‚    â””â”€â”€ Optional ML text classifier
+  â”œâ”€â”€ Dashboard, reports, quarantine, audit logs
+  â–¼
 PostgreSQL database
 ```
 
@@ -241,23 +241,23 @@ Consult the interactive API docs for request schemas, response formats, and curr
 
 ```text
 phishguard/
-├── backend/
-│   ├── app/                 # FastAPI application, models, auth, API routers
-│   ├── alembic/             # Database migrations
-│   ├── data/                # Example dataset schema, not private email data
-│   ├── ml/                  # Model training and artifacts logic
-│   ├── tests/               # Analysis and API tests
-│   ├── .env.example         # Safe configuration template
-│   └── requirements.txt
-├── frontend/
-│   ├── src/                 # React application and dashboard pages
-│   ├── package.json
-│   └── vercel.json
-├── docs/
-│   ├── architecture.md
-│   ├── security-and-privacy.md
-│   └── evaluation-report-template.md
-└── README.md
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ app/                 # FastAPI application, models, auth, API routers
+â”‚   â”œâ”€â”€ alembic/             # Database migrations
+â”‚   â”œâ”€â”€ data/                # Example dataset schema, not private email data
+â”‚   â”œâ”€â”€ ml/                  # Model training and artifacts logic
+â”‚   â”œâ”€â”€ tests/               # Analysis and API tests
+â”‚   â”œâ”€â”€ .env.example         # Safe configuration template
+â”‚   â””â”€â”€ requirements.txt
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ src/                 # React application and dashboard pages
+â”‚   â”œâ”€â”€ package.json
+â”‚   â””â”€â”€ vercel.json
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ architecture.md
+â”‚   â”œâ”€â”€ security-and-privacy.md
+â”‚   â””â”€â”€ evaluation-report-template.md
+â””â”€â”€ README.md
 ```
 
 ## Adding Real Screenshots
@@ -316,3 +316,4 @@ No license has been specified in this repository yet. Add a `LICENSE` file befor
 Built for learning, defensive security, and safer email investigation.
 
 </div>
+
