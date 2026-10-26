@@ -60,21 +60,26 @@ Feature availability depends on configuration and whether the required database 
 
 ```text
 Browser
-  â”‚
-  â–¼
-React + Vite frontend
-  â”‚  HTTP API requests, session cookie, CSRF token
-  â–¼
-FastAPI backend
-  â”œâ”€â”€ Authentication and authorization
-  â”œâ”€â”€ Email parsing and analysis pipeline
-  â”‚    â”œâ”€â”€ Sender / header checks
-  â”‚    â”œâ”€â”€ URL indicator checks
-  â”‚    â”œâ”€â”€ Content heuristics
-  â”‚    â””â”€â”€ Optional ML text classifier
-  â”œâ”€â”€ Dashboard, reports, quarantine, audit logs
-  â–¼
-PostgreSQL database
+  |
+  v
+React + Vite Frontend
+  |
+  |-- HTTP API requests
+  |-- Session cookies and CSRF protection
+  |
+  v
+FastAPI Backend
+  |
+  |-- Authentication and authorization
+  |-- Email parsing and analysis
+  |-- Sender and header checks
+  |-- URL indicator checks
+  |-- Content heuristics
+  |-- Optional ML text classifier
+  |-- Dashboard, reports, quarantine, audit logs
+  |
+  v
+PostgreSQL Database
 ```
 
 More details: [`docs/architecture.md`](docs/architecture.md) and [`docs/security-and-privacy.md`](docs/security-and-privacy.md).
@@ -239,26 +244,29 @@ Consult the interactive API docs for request schemas, response formats, and curr
 
 ## Repository Structure
 
-```text
 phishguard/
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ app/                 # FastAPI application, models, auth, API routers
-â”‚   â”œâ”€â”€ alembic/             # Database migrations
-â”‚   â”œâ”€â”€ data/                # Example dataset schema, not private email data
-â”‚   â”œâ”€â”€ ml/                  # Model training and artifacts logic
-â”‚   â”œâ”€â”€ tests/               # Analysis and API tests
-â”‚   â”œâ”€â”€ .env.example         # Safe configuration template
-â”‚   â””â”€â”€ requirements.txt
-â”œâ”€â”€ frontend/
-â”‚   â”œâ”€â”€ src/                 # React application and dashboard pages
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ vercel.json
-â”œâ”€â”€ docs/
-â”‚   â”œâ”€â”€ architecture.md
-â”‚   â”œâ”€â”€ security-and-privacy.md
-â”‚   â””â”€â”€ evaluation-report-template.md
-â””â”€â”€ README.md
-```
+|-- backend/
+|   |-- app/                         # FastAPI application, models, auth, API routers
+|   |-- alembic/                     # Database migrations
+|   |-- data/                        # Example dataset schema
+|   |-- ml/                           # Model training and artifacts
+|   |-- tests/                        # Analysis and API tests
+|   |-- .env.example                 # Safe configuration template
+|   |-- requirements.txt
+|
+|-- frontend/
+|   |-- src/                          # React application and dashboard
+|   |-- package.json
+|   |-- vercel.json
+|
+|-- docs/
+|   |-- screenshots/
+|   |   |-- dashboard-preview.png
+|   |-- architecture.md
+|   |-- security-and-privacy.md
+|   |-- evaluation-report-template.md
+|
+|-- README.md
 
 ## Adding Real Screenshots
 
