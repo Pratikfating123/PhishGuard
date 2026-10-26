@@ -1,95 +1,318 @@
-# PhishGuard AI
+<div align="center">
 
-AI-powered phishing detection and secure email management. React + Vite + Tailwind frontend, FastAPI + PostgreSQL backend, scikit-learn text classifier.
+# 🛡️ PhishGuard AI
 
-## Status
+### AI-assisted phishing detection and secure email analysis
 
-| Part | State |
+Analyze suspicious email content, inspect URLs and sender signals, review risk indicators, and keep an auditable record of security investigations.
+
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+
+**Live Demo:** [PhishGuard AI](https://phish-guard-murex.vercel.app/) · **API Docs:** run the backend locally and visit `http://localhost:8000/docs`
+
+</div>
+
+---
+
+## Product Preview
+
+![PhishGuard AI dashboard preview](docs/screenshots/dashboard-preview.svg)
+
+> The included preview is an illustrative README graphic, not a captured live application screenshot. Replace it with a real screenshot from your running app when available. See [Adding real screenshots](#adding-real-screenshots).
+
+## Overview
+
+PhishGuard AI is a full-stack security project designed to help users investigate potentially malicious emails. It combines a React interface with a FastAPI backend, PostgreSQL persistence, rule-based indicators, and an optional machine-learning text classifier.
+
+The analysis pipeline separates observed message facts from heuristic signals. Its risk score is an evidence-ranking score, **not a calibrated probability**. When a trained classifier is unavailable and evidence is insufficient, the system can return an inconclusive result rather than declaring an email safe.
+
+## Features
+
+- **Email analysis:** submit email content for a structured security assessment.
+- **URL indicators:** inspect URLs found in a message and report heuristic warning signals without visiting the URLs.
+- **Sender and header signals:** evaluate available sender, reply-to, authentication-result, and content indicators.
+- **Risk summary:** combine analysis signals into a risk category, score, evidence, and suggested next steps.
+- **Email workspace:** browse imported email records and view analysis history.
+- **Threats and quarantine views:** review flagged messages and quarantine records.
+- **Dashboard and reports:** view dashboard statistics, trends, risk distribution, and exportable reports.
+- **Audit trail:** retain records of relevant application actions.
+- **Authentication protections:** HttpOnly session cookie, CSRF-token checks for state-changing requests, password hashing, and ownership checks.
+- **Responsive frontend:** React, Vite, Tailwind CSS, and Recharts.
+
+Feature availability depends on configuration and whether the required database and trained model are present. Password-reset email delivery and some settings shown in the UI require additional implementation or integration.
+
+## Technology Stack
+
+| Layer | Technologies |
 |---|---|
-| Analysis engine (parser, URL, sender, content, aggregation) | Written and tested (11 tests pass) |
-| ML training script | Written, needs your labeled dataset |
-| API (auth, emails, analysis, quarantine, dashboard, reports, audit) | Written, compiled, **not yet run** |
-| API tests (`tests/test_api.py`) | Written, **not yet run** (needs PostgreSQL) |
-| Frontend (landing, auth, 9 dashboard pages) | Written, syntax-checked, **not yet built or run** |
-| Alembic | Configured, **first migration still needs generating** (step 3) |
+| Frontend | React 18, Vite, React Router, Tailwind CSS, Recharts, Lucide React |
+| Backend | Python, FastAPI, Uvicorn, Pydantic |
+| Database and migrations | PostgreSQL, SQLAlchemy, Alembic |
+| Machine learning | scikit-learn, TF-IDF, Logistic Regression, pandas, joblib |
+| Security | Argon2 password hashing, JWT-based session cookie, CSRF checks, security headers |
+| Deployment | Vercel-compatible frontend; backend can be deployed separately |
 
-The workspace this was written in could not reach PyPI or npm, so the API and frontend were never executed. Expect to fix small errors on first run.
+## Architecture
 
-## Requirements
+```text
+Browser
+  │
+  ▼
+React + Vite frontend
+  │  HTTP API requests, session cookie, CSRF token
+  ▼
+FastAPI backend
+  ├── Authentication and authorization
+  ├── Email parsing and analysis pipeline
+  │    ├── Sender / header checks
+  │    ├── URL indicator checks
+  │    ├── Content heuristics
+  │    └── Optional ML text classifier
+  ├── Dashboard, reports, quarantine, audit logs
+  ▼
+PostgreSQL database
+```
 
-Python 3.11+, Node 20+, PostgreSQL 14+.
+More details: [`docs/architecture.md`](docs/architecture.md) and [`docs/security-and-privacy.md`](docs/security-and-privacy.md).
 
-## Setup
+## Getting Started on Windows
 
-```bash
-# 1. Database
-createdb phishguard   # or: psql -c "CREATE DATABASE phishguard;"
-psql -c "CREATE USER phishguard WITH PASSWORD 'change-me'; GRANT ALL ON DATABASE phishguard TO phishguard;"
+### Prerequisites
 
-# 2. Backend
+Install the following before starting:
+
+- Python 3.11 or newer
+- Node.js 20 or newer and npm
+- PostgreSQL 14 or newer
+- Git
+
+### 1. Clone the repository
+
+```powershell
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd phishguard
+```
+
+Replace `<YOUR_GITHUB_REPOSITORY_URL>` with your repository URL. If you already downloaded the source ZIP, extract it and open the `phishguard` folder in VS Code.
+
+### 2. Create the PostgreSQL database
+
+Open `psql` or pgAdmin and create a database and user. Example SQL:
+
+```sql
+CREATE USER phishguard WITH PASSWORD 'replace-with-a-strong-password';
+CREATE DATABASE phishguard OWNER phishguard;
+```
+
+Use your own strong password. If the database or user already exists, do not run the creation statements again.
+
+### 3. Configure the backend
+
+Open PowerShell in the project folder:
+
+```powershell
 cd backend
-python -m venv .venv && source .venv/bin/activate
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -r requirements.txt
-cp .env.example .env
-python -c "import secrets; print(secrets.token_urlsafe(48))"   # paste into SECRET_KEY in .env
+Copy-Item .env.example .env
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
 
-# 3. Migrations (generate the first one, then apply)
+Copy the generated secret into `SECRET_KEY` in `backend/.env`. Update `DATABASE_URL` with your PostgreSQL username, password, host, and database name. Example:
+
+```env
+DATABASE_URL=postgresql+psycopg2://phishguard:YOUR_PASSWORD@localhost:5432/phishguard
+SECRET_KEY=PASTE_A_LONG_RANDOM_SECRET_HERE
+CORS_ORIGINS=http://localhost:5173
+COOKIE_SECURE=false
+```
+
+Do not commit `.env` or real credentials to GitHub.
+
+### 4. Apply database migrations
+
+Run these commands from the `backend` folder:
+
+```powershell
+alembic upgrade head
+```
+
+If this is a fresh checkout and there is no migration revision in `backend/alembic/versions/`, generate the initial migration once, then apply it:
+
+```powershell
 alembic revision --autogenerate -m "initial schema"
 alembic upgrade head
+```
 
-# 4. Train the classifier (see "Dataset" below). Without it, results use rules only.
-python -m ml.train --data data/emails.csv --text-col text --label-col label
+Do not generate a second initial migration if one is already committed.
 
-# 5. Demo data (optional, synthetic). Prints the demo password once.
-python seed.py
+### 5. Start the backend API
 
-# 6. Run the API
+From `backend` with the virtual environment active:
+
+```powershell
 uvicorn app.main:app --reload --port 8000
+```
 
-# 7. Frontend (new terminal)
+Check the health endpoint at `http://localhost:8000/api/health`. Interactive API documentation is at `http://localhost:8000/docs`.
+
+### 6. Start the frontend
+
+Open a second PowerShell terminal:
+
+```powershell
 cd frontend
 npm install
-npm run dev        # http://localhost:5173
+npm run dev
 ```
 
-## Tests
+Open the local URL printed by Vite, normally `http://localhost:5173`.
 
-```bash
-cd backend
-pytest tests/test_analysis.py                       # no database needed
-SECRET_KEY=test DATABASE_URL=postgresql+psycopg2://phishguard:change-me@localhost/phishguard_test pytest tests/test_api.py
-cd ../frontend && npm run build                      # confirms the frontend compiles
+If the frontend needs a different API address, check `frontend/src/api.js` and configure the environment variable expected by that file. Keep the frontend's API URL aligned with the backend deployment.
+
+## Optional: Train the Machine-Learning Classifier
+
+The classifier needs a labeled CSV dataset. Use a dataset that you are permitted to use and redistribute, and review its license before including it in the repository.
+
+Expected example format:
+
+```csv
+text,label
+"Example email content goes here",0
+"Example suspicious email content goes here",1
 ```
 
-## Dataset
+Place the dataset at `backend/data/emails.csv`, with `1` representing phishing and `0` representing legitimate email, unless you configure different column names. Then run from `backend`:
 
-Put a labeled CSV at `backend/data/emails.csv` with a text column (subject and body) and a label column (1 phishing, 0 legitimate). Use a published, licensed corpus. The training script removes duplicate texts before splitting, chooses the threshold on a validation split only, and prints test-set size, class counts, precision, recall, F1 and the confusion matrix into `ml/artifacts/metadata.json`. Report those numbers as they are. A model trained on a handful of invented examples proves nothing.
-
-## What is not built yet
-
-- Password reset (needs an email sender; the endpoint returns 501 on purpose)
-- Password change, notification preferences, admin risk policy, mailbox integrations (Settings page lists these)
-- Threat review status actions and a dedicated threats API (the Threats page filters analyses)
-- Admin-only Administration section
-- Framer Motion animation and a newsletter form (omitted rather than faked)
-- Rate limiting is in-memory per process; use Redis or a gateway for multiple workers
-
-## API
-
-`POST /api/auth/register|login|logout|forgot-password|reset-password`, `GET /api/auth/me`
-`GET /api/emails`, `POST /api/emails/import`, `GET /api/emails/{id}`, `PATCH /api/emails/{id}/read-status`
-`POST /api/analyze`, `GET /api/analysis`, `GET /api/analysis/{id}`
-`GET /api/quarantine`, `POST /api/quarantine/{email_id}`, `POST /api/quarantine/{email_id}/release` (body `{"confirm": true}`)
-`GET /api/dashboard/stats|trends|risk-distribution`, `GET /api/reports/export`, `GET /api/audit-logs`
-Interactive docs at http://localhost:8000/docs.
-
-## Layout
-
+```powershell
+python -m ml.train --data data/emails.csv --text-col text --label-col label
 ```
-backend/app/analysis/   parser, urls, headers, text_model, engine (pure Python, tested)
-backend/app/routers/    HTTP endpoints
-backend/ml/train.py     training and evaluation
-frontend/src/pages/     landing and auth
-frontend/src/dashboard/ authenticated app
-docs/                   architecture, security notes, evaluation template
+
+Review the generated evaluation metadata before making claims about detection performance. A model trained on a tiny or synthetic dataset is not evidence of real-world accuracy. The application can use rule-based analysis when a trained model is not available, but it should not be treated as a replacement for a dedicated email-security product.
+
+## Tests and Build Checks
+
+From the `backend` folder:
+
+```powershell
+pytest tests/test_analysis.py
 ```
+
+For API tests, configure a separate test database and a test-only `SECRET_KEY` before running:
+
+```powershell
+$env:SECRET_KEY = "local-test-secret-change-this"
+$env:DATABASE_URL = "postgresql+psycopg2://phishguard:YOUR_PASSWORD@localhost:5432/phishguard_test"
+pytest tests/test_api.py
+```
+
+From the `frontend` folder:
+
+```powershell
+npm run build
+```
+
+Run tests only against local or explicitly authorized systems. Use synthetic or sanitized email data during development.
+
+## API Reference
+
+The backend exposes interactive API documentation at `/docs`. Main endpoint groups include:
+
+| Area | Example endpoints |
+|---|---|
+| Health | `GET /api/health` |
+| Authentication | `/api/auth/*` |
+| Emails | `GET /api/emails`, `POST /api/emails/import` |
+| Analysis | `POST /api/analyze`, `GET /api/analysis` |
+| Quarantine | `GET /api/quarantine`, `POST /api/quarantine/{email_id}` |
+| Dashboard | `/api/dashboard/stats`, `/api/dashboard/trends`, `/api/dashboard/risk-distribution` |
+| Reports | `GET /api/reports/export` |
+| Audit | `GET /api/audit-logs` |
+
+Consult the interactive API docs for request schemas, response formats, and current endpoint behavior.
+
+## Repository Structure
+
+```text
+phishguard/
+├── backend/
+│   ├── app/                 # FastAPI application, models, auth, API routers
+│   ├── alembic/             # Database migrations
+│   ├── data/                # Example dataset schema, not private email data
+│   ├── ml/                  # Model training and artifacts logic
+│   ├── tests/               # Analysis and API tests
+│   ├── .env.example         # Safe configuration template
+│   └── requirements.txt
+├── frontend/
+│   ├── src/                 # React application and dashboard pages
+│   ├── package.json
+│   └── vercel.json
+├── docs/
+│   ├── architecture.md
+│   ├── security-and-privacy.md
+│   └── evaluation-report-template.md
+└── README.md
+```
+
+## Adding Real Screenshots
+
+To replace the illustrative preview with a genuine screenshot:
+
+1. Run the backend and frontend locally, or open the deployed application.
+2. Navigate to the page you want to document, for example the landing page or dashboard.
+3. Capture a screenshot with your operating system's screenshot tool.
+4. Save it in `docs/screenshots/`, for example as `dashboard.png`.
+5. Update the image link near the top of this README to `![PhishGuard AI dashboard](docs/screenshots/dashboard.png)`.
+
+Use synthetic messages and hide personal information, email addresses, tokens, and other sensitive data in screenshots.
+
+## Security and Privacy Notes
+
+- Never upload `.env`, database passwords, secret keys, access tokens, real customer emails, or private datasets to a public repository.
+- Treat email content, URLs, and attachments as untrusted input. Do not open suspicious links or attachments just to test detection.
+- The URL checks are designed to evaluate extracted strings and heuristics. Do not assume the application has verified a URL's live reputation unless a reputation integration is explicitly configured.
+- A risk score is not a probability or a guarantee. Verify important findings with additional security controls and human review.
+- Review [`docs/security-and-privacy.md`](docs/security-and-privacy.md) before using real email data or deploying for multiple users.
+
+## Current Limitations
+
+- Password reset email delivery requires an email provider integration.
+- Some settings and administrative workflows may be placeholders or require additional implementation.
+- Rate limiting is in-memory and is not sufficient by itself for a multi-worker production deployment.
+- Machine-learning quality depends on dataset quality, class balance, and measured evaluation results.
+- Production deployment requires secure environment variables, HTTPS, a managed database, backups, logging, and operational monitoring.
+
+## Roadmap
+
+- [ ] Add and document verified screenshots of the live application
+- [ ] Add repeatable CI checks for backend tests and frontend builds
+- [ ] Integrate a production-grade rate limiter
+- [ ] Add configurable email delivery for password reset and notifications
+- [ ] Publish model evaluation results from a licensed, representative dataset
+- [ ] Add deployment instructions for the API and PostgreSQL database
+
+## Contributing
+
+Issues and pull requests are welcome. For significant changes, describe the problem, proposed solution, and how you tested it. Avoid submitting secrets, real email content, or sensitive indicators.
+
+## Disclaimer
+
+PhishGuard AI is an educational and defensive security project. It can produce false positives and false negatives. Do not use its output as the sole basis for security, legal, financial, or operational decisions.
+
+## License
+
+No license has been specified in this repository yet. Add a `LICENSE` file before presenting the project as open source or permitting reuse.
+
+---
+
+<div align="center">
+
+Built for learning, defensive security, and safer email investigation.
+
+</div>
